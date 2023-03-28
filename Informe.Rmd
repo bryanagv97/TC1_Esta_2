@@ -1,0 +1,72 @@
+---
+title: "Trabajo corto Estadistica 2"
+author: "Grupo 12 -> "
+date: "2023-03-26"
+output:
+  html_document:
+    df_print: paged
+---
+<style type="text/css">
+  body{
+  font-size: 12pt;
+  font-style:italic
+}
+</style>
+
+## Problema
+
+En un estudio a gran escala realizado en EE.UU sobre la eficacia en el control de infecciones
+hospitalarias se recogió información en 113 hospitales. A su equipo de trabajo le corresponde analizar una
+muestra aleatoria de __n__ hospitales, que están dentro de un archivo de texto etiquetado Equipo12.txt, donde
+__n__ es el número de registros en el archivo asignado y 12 es el número de equipo asignado por su profesor. Las
+bases de datos, la asignación de los equipos y los archivos necesarios para resolver el trabajo, serán enviados
+por su profesor. Cada base de datos contiene las siguientes columnas (__variables__):
+
+```{r setup, include=TRUE,results='asis'}
+library(knitr)
+source("C:/Estadistica 2/Trabajo 1/Functions.R")
+base <- read.table(file.choose(), header = T)
+kable(base)
+```
+Luego de tener los datos asignados se procede a resolver los problemas propuestos en el taller:
+
+## Solución
+
+1. Se estima el modelo de regresion por medio de los k=5 parametros que se tienen.
+
+```{r include=TRUE,results='asis'}
+modelo <- lm(Y ~ ., base)
+myAnova(modelo)
+```
+
+```{r include=TRUE,echo=TRUE}
+summary(modelo)$coefficients
+```
+
+
+
+Teniendo ya este modelo desarrollado se procede a escribir el modelo (__RLM__):
+
+$$Y =0.550+0.260X_{1}-0.012X_{2}+0.050X_{3}+0.010X_{4}+0.001X_{5}$$
+### Significancia de los parametros del modelo
+
+Se realiza la prueba de hipotesis de significancia:
+
+$$ H_{0}: \beta_{j}=0 \hspace{1cm} H_{1}:\beta_{j}\neq 0$$
+Con ayuda de la tabala de los parámetros estimados se obtiene __valor del estadistico de prueba__ y el __valor P__ para la prueba de hipotesis.\\
+Se estipula un nivel de significancia de $\alpha=0.05$ se concluye que los parametros $\beta_{1},\beta_{3},\beta_{5}$ son significativos cada uno en presencia respecto a los demás parámetros de la __(RLM)__.\\
+
+Siendo asi que los demás parámetros de la Regresión no son significaticos en presencia de los demás parametros.
+
+### Interpretación de los párametros estimados
+
+Como se dijo anterioramente solo los siguientes parámetros son susceptibles a intepretación que son significativos individualmente $\beta_{1},\beta_{3},\beta_{5}$.
+
+Se tiene $\hat{\beta_{1}} = 0.2601$ indica que por cada unidad de dias que en promedio este el paciente en el hospital, se estima que se tiene una mayor probabilidad promedio de adquirir una infección en el hospital;$\hat{\beta_{3}} = 0.0502$ indica que por cada unidad de numero de camas en promedio en el hospital en el estudio, se estima que se tiene una mayor probabilidad promedio de adquirir una infección en el hospital y $\hat{\beta_{5}} = 0.0013$ indica que por cada unidad de cantidad de enfermeras en proemdio equivalentes a tiempo completo en el estudio, se estima que se tiene una mayor probabilidad promedio de adquirir una infección en el hospital.
+
+### Cálculo e interpretación del coeficiente de determinación
+
+
+
+
+
