@@ -23,6 +23,7 @@ bases de datos, la asignación de los equipos y los archivos necesarios para res
 por su profesor. Cada base de datos contiene las siguientes columnas (__variables__):
 
 ```{r setup, include=TRUE,results='asis'}
+if(!require(leaps)){install.packages("leaps"); library(leaps)}
 library(knitr)
 source("C:/Estadistica 2/Trabajo 1/Functions.R")
 base <- read.table(file.choose(), header = T)
@@ -34,12 +35,9 @@ Luego de tener los datos asignados se procede a resolver los problemas propuesto
 
 1. Se estima el modelo de regresion por medio de los k=5 parametros que se tienen.
 
-```{r include=TRUE,results='asis'}
-modelo <- lm(Y ~ ., base)
-myAnova(modelo)
-```
 
 ```{r include=TRUE,echo=TRUE}
+modelo <- lm(Y ~ ., base)
 summary(modelo)$coefficients
 ```
 
@@ -66,7 +64,38 @@ Se tiene $\hat{\beta_{1}} = 0.2601$ indica que por cada unidad de dias que en pr
 
 ### Cálculo e interpretación del coeficiente de determinación
 
+Se tiene $R^{2}=\frac{SSR}{SST}=1-\frac{SSE}{SST}$ por tanto de la tabla ANOVA se calcula la suma de cuadrados residuales y totales:
 
+```{r include=TRUE,echo=TRUE}
+myAnova(modelo)
+```
 
+$$ R^{2}=\frac{SSR}{SST}=\frac{86112.5}{86112.5+26662.4}=0.7635786$$
+El 76.36% de la variabilidad total en la probabilidad promedio estimada de adquirir infección en el hospital es explicado por el modelo RLM.\\
+
+## Prueba de significancia de un subconjunto de coeficiente de regresión
+
+Para este punto se debe realizar todas las posibles tablas de regresiones posibles, ademas como se tienen que los tres parametros con mayor valor P son $\beta_{0},\beta_{2},\beta_{4}$ :
+
+```{r echo=TRUE}
+myAllRegTable(modelo)
+```
+
+Por tanto se realiza la siguiente prueba de hipótesis:
+
+$$ H_{0}: \beta_{0}=\beta_{2}=\beta_{4}=0 \hspace{1cm} H1: Algún \hspace{0.2cm} \beta_{j}\neq 0, j=0,2,4$$
+Segun la tabala ya realizada anteriormente se tiene $2^{k}-1=31$ posibles regresiones multiples.\\
+
+Se realiza el estadistico de prueba:
+
+$F_{0} =\frac{MSextra}{MSE}=\frac{MSR(\beta_{0},\beta_{2},\beta_{4}|\beta_{1},\beta_{3},\beta_{5})}{MSE}=\frac{[SSE(\beta_{1},\beta_{3},\beta_{5})-SSE(\beta_{0},\beta_{1},\beta_{2},\beta_{3},\beta_{4},\beta_{5})]/3}{MSE}=\frac{[44.717-42.736]/3}{2666.24}=\frac{0.6603333}{2666.24}=0.00024766$
+
+Para el criterio de decisión se requiere obtener el valor crítico de una distribución $f_{3,51-6}=f_{3,45}$ a un nivel de significancia de $\alpha=0.05$ por tanto $f_{0.05,3,45}=2.812$.\\
+
+Como $F_{0} = 0.000247<f_{0.05,3,45}=2.812$ entonces no se rechaza $H_{0}$ y se concluye que los parametros $X_{0},X_{2},X_{4}$ no dependen de la probabilidad de adquirir en promedio una infección en el hospital.\\
+
+## Pregunta donde se solucione por medio de Hipótesis lineal general
+
+## Validación de supuestos en errores
 
 
